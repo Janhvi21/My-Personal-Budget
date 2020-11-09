@@ -28,6 +28,7 @@
               "src/assets"
             ],
             "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -123,6 +124,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "PersonalBudget"
+    }
+  },
+  "defaultProject": "PersonalBudget",
+  "cli": {
+    "analytics": "20324bd7-e9a2-407e-a867-1ef5bab4dbd0"
+  }
 }
