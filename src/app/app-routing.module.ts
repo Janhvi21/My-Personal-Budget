@@ -4,10 +4,16 @@ import { CommonModule } from '@angular/common';
 import { LoginPageComponent } from './login-page/login-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
+import { HomepageComponent } from './homepage/homepage.component';
 
 const routes: Routes = [
   {
     path: '',
+    component: HomepageComponent,
+    pathMatch: 'full',
+  },
+  {
+    path: 'login',
     component: LoginPageComponent,
     pathMatch: 'full',
   },
@@ -18,11 +24,11 @@ const routes: Routes = [
   {
     path: 'signup',
     component: SignUpComponent,
-  }
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
