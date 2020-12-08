@@ -37,6 +37,8 @@ export class LoginServiceService {
           .get('http://localhost:3000/verifyUser', { params })
           .toPromise()
           .then((res2: any) => {
+
+
             console.log('token response', res2);
             this.isLoggedIn = true;
             this.router.navigate(['/dashboard']);
