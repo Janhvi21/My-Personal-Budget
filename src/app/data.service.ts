@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Data } from '@angular/router';
 import 'rxjs';
 
-
 export class Element {
   value: '';
   labels: '';
@@ -13,6 +12,7 @@ export class Element {
   providedIn: 'root',
 })
 export class DataService {
+  public UserData = {};
   public spentData = [];
   public dataSource = {
     datasets: [
@@ -35,14 +35,14 @@ export class DataService {
   public result;
   constructor(private http: HttpClient) {}
 
-  getData() {
+  /*getData() {
     this.data = [];
     const promise = new Promise((resolve, reject) => {
       this.http
         .get('http://localhost:3000/budget')
         .toPromise()
         .then((res: any) => {
-          for (let i = 0; i < res.myBudget.length; i++) {
+          /*for (let i = 0; i < res.myBudget.length; i++) {
             this.dataSource.datasets[0].data[i] = res.myBudget[i].budget;
             this.dataSource.labels[i] = res.myBudget[i].title;
             this.spentData[i] = res.myBudget[i].spent;
@@ -51,7 +51,32 @@ export class DataService {
             ele.labels = res.myBudget[i].title;
             this.data.push(ele);
             resolve();
+          }*/
+        /*});
+    });
+    return promise;
+  }*/
+
+  getDataFromFirebase() {
+    const params = {
+      token: localStorage.getItem('TOKEN'),
+    };
+    const promise = new Promise((resolve, reject) => {
+      this.http
+        .get('http://localhost:3000/getAllData', { params })
+        .toPromise()
+        .then((res: any) => {
+          let i = 0;
+          const budgetData = res['2020']['January']['Budget'];
+          const expData = res['2020']['January']['Expense'];
+          for (let budget in budgetData) {
+            this.dataSource.datasets[0].data[i] = budgetData[budget];
+            this.dataSource.labels[i] = budget;
+            this.spentData[i] = expData[budget];
+            i++;
           }
+          this.UserData = res['2020']['January']['Budget'];
+          resolve();
         });
     });
     return promise;

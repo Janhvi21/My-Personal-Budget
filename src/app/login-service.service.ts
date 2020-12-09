@@ -27,6 +27,7 @@ export class LoginServiceService {
           .auth()
           .currentUser.getIdToken(true)
           .then(function (idToken) {
+            localStorage.setItem('TOKEN', idToken);
             console.log('token current ', idToken);
             currentToken = idToken;
           });
@@ -37,8 +38,6 @@ export class LoginServiceService {
           .get('http://localhost:3000/verifyUser', { params })
           .toPromise()
           .then((res2: any) => {
-
-
             console.log('token response', res2);
             this.isLoggedIn = true;
             this.router.navigate(['/dashboard']);

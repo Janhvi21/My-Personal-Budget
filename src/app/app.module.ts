@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { HomepageComponent } from './homepage/homepage.component';
 import { HttpClientModule } from '@angular/common/http';
 import { firebase} from '../../node_modules/@firebase/app';
+import { BudgetModalComponent } from './budget-modal/budget-modal.component';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { firebase} from '../../node_modules/@firebase/app';
     DashboardComponent,
     LoginPageComponent,
     SignUpComponent,
-    HomepageComponent
+    HomepageComponent,
+    BudgetModalComponent
   ],
   imports: [
     BrowserModule,
