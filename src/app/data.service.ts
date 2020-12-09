@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Data } from '@angular/router';
 import 'rxjs';
+import { AppModule } from './app.module';
 
 export class Element {
   value: '';
@@ -12,6 +13,7 @@ export class Element {
   providedIn: 'root',
 })
 export class DataService {
+  public transactions=[];
   public UserData = {};
   public spentData = [];
   public dataSource = {
@@ -52,7 +54,7 @@ export class DataService {
             this.data.push(ele);
             resolve();
           }*/
-        /*});
+  /*});
     });
     return promise;
   }*/
@@ -73,9 +75,43 @@ export class DataService {
             this.dataSource.datasets[0].data[i] = budgetData[budget];
             this.dataSource.labels[i] = budget;
             this.spentData[i] = expData[budget];
+
             i++;
           }
+          this.transactions=res['2020']['January']['Transactions'];
           this.UserData = res['2020']['January']['Budget'];
+          resolve();
+        });
+    });
+    return promise;
+  }
+  insertCategory(category: string, amount: string) {
+    const params = {
+      token: localStorage.getItem('TOKEN'),
+      category: category,
+      Amount: amount,
+    };
+    const promise = new Promise((resolve, reject) => {
+      this.http
+        .get('http://localhost:3000/insertCategory', { params })
+        .toPromise()
+        .then((res: any) => {
+          resolve();
+        });
+    });
+    return promise;
+  }
+  deleteCategory(rows) {
+    const params = {
+      token: localStorage.getItem('TOKEN'),
+      key:rows.key,
+      value:rows.value
+    };
+    const promise = new Promise((resolve, reject) => {
+      this.http
+        .get('http://localhost:3000/deleteCategory', { params })
+        .toPromise()
+        .then((res: any) => {
           resolve();
         });
     });

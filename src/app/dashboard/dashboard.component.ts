@@ -4,12 +4,13 @@ import { Chart } from 'chart.js';
 import * as d3 from 'd3';
 import { isEmptyObject } from 'jquery';
 import { DataService } from '../data.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements AfterViewInit {
+export class DashboardComponent implements AfterViewInit, OnInit {
   private svg;
   private margin = 50;
   private width = 750;
@@ -20,12 +21,14 @@ export class DashboardComponent implements AfterViewInit {
   public totalSpent = 0;
   public totalSaving = 0;
   public budget;
+  public transactions=[];
 
   constructor(
     public dataService: DataService,
-    public loginServiceService: LoginServiceService
+    public loginServiceService: LoginServiceService,
+    private router: Router
   ) {}
-
+  ngOnInit(): void {}
   ngAfterViewInit(): void {
     // service call only if data is empty
     console.log('After View');
@@ -33,9 +36,8 @@ export class DashboardComponent implements AfterViewInit {
       isEmptyObject(this.dataService.data) ||
       isEmptyObject(this.dataService.dataSource)
     ) {
-     // this.dataService.getData();
+      // this.dataService.getData();
       this.dataService.getDataFromFirebase();
-
     } else {
     }
 
@@ -43,17 +45,36 @@ export class DashboardComponent implements AfterViewInit {
       this.createChart();
       //this.drawChart();
       this.createBarChart();
-      this.budget=this.dataService.UserData;
+      this.budget = this.dataService.UserData;
       this.calculateTotalBudget();
-      console.log(this.budget)
+      let i=0;
+      while(this.dataService.transactions[i]){
+        for(let row in this.dataService.transactions[i]){
+          console.log(row)
+          this.transactions.push(row);
+        }
+      }
+
+      console.log('Transactions', this.dataService.transactions);
     }, 500);
   }
+
   calculateTotalBudget(): void {
-    for (let i = 0; i < this.dataService.dataSource.datasets[0].data.length; i++) {
+    for (
+      let i = 0;
+      i < this.dataService.dataSource.datasets[0].data.length;
+      i++
+    ) {
       this.totalBudget += this.dataService.dataSource.datasets[0].data[i];
       this.totalSpent += this.dataService.spentData[i];
     }
     this.totalSaving = this.totalBudget - this.totalSpent;
+  }
+  reload(msg: string): void {
+    this.dataService.dataSource.datasets[0].data = [];
+    this.dataService.dataSource.labels = [];
+    this.dataService.spentData = [];
+    this.ngAfterViewInit();
   }
   createBarChart(): void {
     const ctx = document.getElementById('barChart');
