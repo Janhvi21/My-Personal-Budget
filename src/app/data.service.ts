@@ -13,8 +13,8 @@ export class Element {
   providedIn: 'root',
 })
 export class DataService {
-  public transactions=[];
-  public UserData = {};
+  public transactions = [];
+  public UserData = [];
   public spentData = [];
   public dataSource = {
     datasets: [
@@ -78,7 +78,7 @@ export class DataService {
 
             i++;
           }
-          this.transactions=res['2020']['January']['Transactions'];
+          this.transactions = res['2020']['January']['Transactions'];
           this.UserData = res['2020']['January']['Budget'];
           resolve();
         });
@@ -104,12 +104,35 @@ export class DataService {
   deleteCategory(rows) {
     const params = {
       token: localStorage.getItem('TOKEN'),
-      key:rows.key,
-      value:rows.value
+      key: rows.key,
+      value: rows.value,
     };
     const promise = new Promise((resolve, reject) => {
       this.http
         .get('http://localhost:3000/deleteCategory', { params })
+        .toPromise()
+        .then((res: any) => {
+          resolve();
+        });
+    });
+    return promise;
+  }
+  insertTransaction(
+    category: string,
+    amount: string,
+    detail: string,
+    date: string
+  ) {
+    const params = {
+      token: localStorage.getItem('TOKEN'),
+      Category: category,
+      Date: date,
+      Details: detail,
+      Spent: amount,
+    };
+    const promise = new Promise((resolve, reject) => {
+      this.http
+        .get('http://localhost:3000/insertTransaction', { params })
         .toPromise()
         .then((res: any) => {
           resolve();

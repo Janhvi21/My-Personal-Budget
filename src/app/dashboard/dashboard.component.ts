@@ -47,14 +47,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
       this.createBarChart();
       this.budget = this.dataService.UserData;
       this.calculateTotalBudget();
-      let i=0;
-      while(this.dataService.transactions[i]){
-        for(let row in this.dataService.transactions[i]){
-          console.log(row)
-          this.transactions.push(row);
-        }
-      }
-
       console.log('Transactions', this.dataService.transactions);
     }, 500);
   }

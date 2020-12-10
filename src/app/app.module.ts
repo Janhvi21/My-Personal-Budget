@@ -17,8 +17,12 @@ import { firebase} from '../../node_modules/@firebase/app';
 import { BudgetModalComponent } from './budget-modal/budget-modal.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
-
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input'
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,6 +41,11 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     AngularFireAuthModule,
     FormsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   providers: [LoginServiceService],
   bootstrap: [AppComponent]
