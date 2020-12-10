@@ -40,7 +40,7 @@ export class LoginServiceService {
           .then((res2: any) => {
             console.log('token response', res2);
             this.isLoggedIn = true;
-            this.router.navigate(['/dashboard']);
+            this.router.navigate(['/sidebar']);
           });
         return true;
       })
@@ -66,7 +66,7 @@ export class LoginServiceService {
       .then((res1: any) => {
         console.log('Response', res1);
         this.Token = res1.tokenID;
-        this.router.navigate(['/dashboard']);
+        this.router.navigate(['/sidebar']);
       });
   }
   logout() {

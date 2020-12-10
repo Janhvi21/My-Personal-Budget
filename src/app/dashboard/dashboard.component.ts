@@ -122,7 +122,5 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     });
   }
 
-  public OnLogout(): void {
-    this.loginServiceService.logout();
-  }
+
 }

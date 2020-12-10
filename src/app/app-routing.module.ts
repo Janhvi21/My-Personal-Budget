@@ -5,6 +5,8 @@ import { LoginPageComponent } from './login-page/login-page.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { HomepageComponent } from './homepage/homepage.component';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 const routes: Routes = [
   {
@@ -18,13 +20,13 @@ const routes: Routes = [
     pathMatch: 'full',
   },
   {
-    path: 'dashboard',
-    component: DashboardComponent,
-  },
-  {
     path: 'signup',
     component: SignUpComponent,
   },
+  {
+    path:'sidebar',
+    component:SidebarComponent
+  }
 ];
 
 @NgModule({

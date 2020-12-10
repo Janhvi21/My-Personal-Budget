@@ -1,4 +1,51 @@
-
+<div class="d-flex" id="content-wrapper" style="padding: 40px">
+  <div id="content">
+    <div class="container-fluid" >
+      <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Transactions</h3>
+      </div>
+      <div class="row">
+          <div class="align-items-center no-gutters">
+              <button
+                type="button"
+                class="btn btn-secondary btn-lg"
+                data-toggle="modal"
+                data-target="#expenseModal"
+              >
+                Add Expense
+              </button>
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>john@example.com</td>
+                  </tr>
+                  <tr>
+                    <td>Mary</td>
+                    <td>Moe</td>
+                    <td>mary@example.com</td>
+                  </tr>
+                  <tr>
+                    <td>July</td>
+                    <td>Dooley</td>
+                    <td>july@example.com</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="col-auto">
+              <i class="fas fa-calendar fa-2x text-gray-300"></i>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
 <div class="modal" id="expenseModal">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -23,7 +70,6 @@
             id="Category"
             placeholder="Enter Category"
             name="Category"
-            [(ngModel)]="category"
           />
         </div>
         <div class="form-group">
@@ -34,18 +80,12 @@
             id="amount"
             placeholder="Enter amount"
             name="amount"
-            [(ngModel)]="amount"
           />
         </div>
       </div>
       <div class="modal-footer">
         <a data-dismiss="modal" class="btn">Close</a>
-        <a
-          class="btn btn-primary"
-          (click)="onAddCategory(category, amount)"
-          data-dismiss="modal"
-          >Add</a
-        >
+        <a class="btn btn-primary" data-dismiss="modal">Add</a>
       </div>
     </div>
   </div>

@@ -16,6 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { firebase} from '../../node_modules/@firebase/app';
 import { BudgetModalComponent } from './budget-modal/budget-modal.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { TransactionsComponent } from './transactions/transactions.component';
     SignUpComponent,
     HomepageComponent,
     BudgetModalComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,

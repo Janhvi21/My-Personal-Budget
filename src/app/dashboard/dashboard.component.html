@@ -1,228 +1,144 @@
-<div id="wrapper">
-  <nav
-    class="navbar navbar-dark align-items-start sidebar sidebar-dark accordion bg-gradient-primary p-0"
-  >
-    <div class="container-fluid d-flex flex-column">
-      <a
-        class="navbar-brand d-flex justify-content-center align-items-center sidebar-brand m-0"
-        href="#"
-        style="padding-left: 0px !important"
-      >
-        <div class="sidebar-brand-text">Personal Budget</div>
-      </a>
-      <hr class="sidebar-divider my-0" />
-      <ul class="nav navbar-nav text-light" id="accordionSidebar">
-        <li class="nav-item">
-          <a class="nav-link active" href="/index.html"
-            ><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/profile.html"
-            ><i class="fas fa-user"></i><span>Profile</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/table.html"
-            ><i class="fas fa-table"></i><span>Table</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/login.html"
-            ><i class="far fa-user-circle"></i><span>Login</span></a
-          >
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" (click)="OnLogout()"
-            ><i class="fas fa-user-circle"></i><span>Log Out</span></a
-          >
-        </li>
-      </ul>
-      <div class="text-center d-none d-md-inline">
-        <button
-          class="btn rounded-circle border-0"
-          id="sidebarToggle"
-          type="button"
-        ></button>
+<div class="d-flex flex-column" id="content-wrapper">
+  <div id="content">
+    <div class="container-fluid" style="padding: 15px">
+      <div class="d-sm-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-dark mb-0">Dashboard</h3>
       </div>
-    </div>
-  </nav>
-  <div class="d-flex flex-column" id="content-wrapper">
-    <div id="content">
-      <div class="container-fluid" style="padding: 15px">
-        <div class="d-sm-flex justify-content-between align-items-center mb-4">
-          <h3 class="text-dark mb-0">Dashboard</h3>
-        </div>
-        <div class="row">
-          <div class="col-md-4 col-xl-3 mb-4">
-            <div class="card shadow border-left-primary py-2">
-              <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                  <div class="col mr-2">
-                    <div
-                      class="text-uppercase text-primary font-weight-bold text-xs mb-1"
-                    >
-                      <span>Total Budget</span>
-                    </div>
-                    <div class="text-dark font-weight-bold h5 mb-0">
-                      <span>${{ totalBudget }}</span>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-xl-3 mb-4">
-            <div class="card shadow border-left-success py-2">
-              <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                  <div class="col mr-2">
-                    <div
-                      class="text-uppercase text-success font-weight-bold text-xs mb-1"
-                    >
-                      <span>Total Amount Spent</span>
-                    </div>
-                    <div class="text-dark font-weight-bold h5 mb-0">
-                      <span>${{ totalSpent }}</span>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4 col-xl-3 mb-4">
-            <div class="card shadow border-left-info py-2">
-              <div class="card-body">
-                <div class="row align-items-center no-gutters">
-                  <div class="col mr-2">
-                    <div
-                      class="text-uppercase text-info font-weight-bold text-xs mb-1"
-                    >
-                      <span>Total Amount Remaining</span>
-                    </div>
-                    <div class="text-dark font-weight-bold h5 mb-0">
-                      <span>${{ totalSaving }}</span>
-                    </div>
-                  </div>
-                  <div class="col-auto">
-                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-lg-7 col-xl-8">
-            <div class="card shadow mb-4">
-              <div
-                class="card-header d-flex justify-content-between align-items-center"
-              >
-                <h6 class="text-primary font-weight-bold m-0">
-                  Spent amount vs budget
-                </h6>
-              </div>
-              <div class="card-body">
-                <div>
-                  <canvas id="barChart" style="padding: 40px"></canvas>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-5 col-xl-4">
-            <div class="card shadow mb-4">
-              <div
-                class="card-header d-flex justify-content-between align-items-center"
-              >
-                <h6 class="text-primary font-weight-bold m-0">
-                  Planned Budget
-                </h6>
-              </div>
-              <div class="card-body">
-                <div>
-                  <canvas id="myChart"></canvas>
-                </div>
-
-                <div class="text-center small mt-4">
-                  <button
-                    type="button"
-                    class="btn btn-secondary btn-lg"
-                    data-toggle="modal"
-                    data-target="#myModal"
+      <div class="row">
+        <div class="col-md-4 col-xl-3 mb-4">
+          <div class="card shadow border-left-primary py-2">
+            <div class="card-body">
+              <div class="row align-items-center no-gutters">
+                <div class="col mr-2">
+                  <div
+                    class="text-uppercase text-primary font-weight-bold text-xs mb-1"
                   >
-                    Edit Budget
-                  </button>
+                    <span>Total Budget</span>
+                  </div>
+                  <div class="text-dark font-weight-bold h5 mb-0">
+                    <span>${{ totalBudget }}</span>
+                  </div>
                 </div>
-                <!-- Modal -->
-
-                <app-budget-modal
-                  [budget]="budget"
-                  (childEvent)="reload($event)"
-                ></app-budget-modal>
+                <div class="col-auto">
+                  <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-lg-5 col-xl-4">
-            <div class="card shadow mb-4">
-              <div
-                class="card-header d-flex justify-content-between align-items-center"
-              >
-                <h6 class="text-primary font-weight-bold m-0">Transactions</h6>
+        </div>
+        <div class="col-md-4 col-xl-3 mb-4">
+          <div class="card shadow border-left-success py-2">
+            <div class="card-body">
+              <div class="row align-items-center no-gutters">
+                <div class="col mr-2">
+                  <div
+                    class="text-uppercase text-success font-weight-bold text-xs mb-1"
+                  >
+                    <span>Total Amount Spent</span>
+                  </div>
+                  <div class="text-dark font-weight-bold h5 mb-0">
+                    <span>${{ totalSpent }}</span>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                </div>
               </div>
-              <div class="card-body">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 col-xl-3 mb-4">
+          <div class="card shadow border-left-info py-2">
+            <div class="card-body">
+              <div class="row align-items-center no-gutters">
+                <div class="col mr-2">
+                  <div
+                    class="text-uppercase text-info font-weight-bold text-xs mb-1"
+                  >
+                    <span>Total Amount Remaining</span>
+                  </div>
+                  <div class="text-dark font-weight-bold h5 mb-0">
+                    <span>${{ totalSaving }}</span>
+                  </div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-lg-7 col-xl-8">
+          <div class="card shadow mb-4">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h6 class="text-primary font-weight-bold m-0">
+                Spent amount vs budget
+              </h6>
+            </div>
+            <div class="card-body">
+              <div>
+                <canvas id="barChart" style="padding: 40px"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 col-xl-4">
+          <div class="card shadow mb-4">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h6 class="text-primary font-weight-bold m-0">
+                Planned Budget
+              </h6>
+            </div>
+            <div class="card-body">
+              <div>
+                <canvas id="myChart"></canvas>
+              </div>
+
+              <div class="text-center small mt-4">
                 <button
                   type="button"
                   class="btn btn-secondary btn-lg"
                   data-toggle="modal"
-                  data-target="#expenseModal"
+                  data-target="#myModal"
                 >
-                  Add Expense
+                  Edit Budget
                 </button>
-                <app-transactions></app-transactions>
-                <div>
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>{{ row.key }}</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>john@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>Mary</td>
-                        <td>Moe</td>
-                        <td>mary@example.com</td>
-                      </tr>
-                      <tr>
-                        <td>July</td>
-                        <td>Dooley</td>
-                        <td>july@example.com</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
               </div>
+              <!-- Modal -->
+
+              <app-budget-modal
+                [budget]="budget"
+                (childEvent)="reload($event)"
+              ></app-budget-modal>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-5 col-xl-4">
+          <div class="card shadow mb-4">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
+              <h6 class="text-primary font-weight-bold m-0">Transactions</h6>
+            </div>
+            <div class="card-body">
+
             </div>
           </div>
         </div>
       </div>
-      <footer class="bg-white sticky-footer">
-        <div class="container my-auto">
-          <div class="text-center my-auto copyright">
-            <span>Copyright © Brand 2020</span>
-          </div>
-        </div>
-      </footer>
     </div>
+    <footer class="bg-white sticky-footer">
+      <div class="container my-auto">
+        <div class="text-center my-auto copyright">
+          <span>Copyright © Brand 2020</span>
+        </div>
+      </div>
+    </footer>
   </div>
 </div>
