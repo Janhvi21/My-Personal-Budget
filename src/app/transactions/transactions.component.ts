@@ -13,7 +13,7 @@ export class TransactionsComponent implements OnInit {
   transaction = [];
   categories = [];
   Category = '';
-  Date = '';
+  Date = new Date();
   Details = '';
   Spent = 0;
   range = new FormGroup({
@@ -23,8 +23,15 @@ export class TransactionsComponent implements OnInit {
   showform: boolean = false;
 
   ngOnInit(): void {
-    for (let row in this.dataServices.transactions[0]) {
-      this.headers.push(row);
+    this.headers = [];
+    this.categories = [];
+    if (
+      this.dataServices.transactions &&
+      this.dataServices.transactions.length > 0
+    ) {
+      for (let row in this.dataServices.transactions[0]) {
+        this.headers.push(row);
+      }
     }
     for (let cat in this.dataServices.UserData) {
       this.categories.push(cat);
@@ -35,17 +42,33 @@ export class TransactionsComponent implements OnInit {
   }
   onAddTransaction(
     Category: string,
-    Date: string,
+    Date: Date,
     Detail: string,
     Spent: number
   ) {
-    console.log(Category, Date, Spent, Detail);
-    this.dataServices.insertTransaction(
-      Category,
-      Spent.toString(),
-      Detail,
-      Date
-    );
+    this.dataServices
+      .insertTransaction(
+        Category,
+        Spent.toString(),
+        Detail,
+        Date.toLocaleDateString('en-US')
+      )
+      .then((res) => {
+        this.dataServices.getDataFromFirebase();
+        setTimeout(() => {
+          this.ngOnInit();
+        }, 800);
+      });
     this.showform = false;
+  }
+  OnDelete(id: string, category: string, spent: string) {
+    this.dataServices
+      .deleteTransactions(id, category, spent)
+      .then((res: any) => {
+        this.dataServices.getDataFromFirebase();
+        setTimeout(() => {
+          this.ngOnInit();
+        }, 500);
+      });
   }
 }

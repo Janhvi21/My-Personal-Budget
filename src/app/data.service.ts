@@ -33,6 +33,7 @@ export class DataService {
     ],
     labels: [],
   };
+  public months = [];
   public data = [];
   public result;
   constructor(private http: HttpClient) {}
@@ -69,6 +70,14 @@ export class DataService {
         .toPromise()
         .then((res: any) => {
           let i = 0;
+          for (let year in res) {
+            if (year != 'email' && year != 'username') {
+              for (let month in res[year]) {
+                this.months.push(month + ' ' + year);
+              }
+            }
+          }
+          console.log('Months', this.months);
           const budgetData = res['2020']['January']['Budget'];
           const expData = res['2020']['January']['Expense'];
           for (let budget in budgetData) {
@@ -133,6 +142,24 @@ export class DataService {
     const promise = new Promise((resolve, reject) => {
       this.http
         .get('http://localhost:3000/insertTransaction', { params })
+        .toPromise()
+        .then((res: any) => {
+          resolve();
+        });
+    });
+    return promise;
+  }
+  deleteTransactions(id: string, category: string, spent: string) {
+    console.log('Spent', spent);
+    const params = {
+      token: localStorage.getItem('TOKEN'),
+      id: id,
+      category: category,
+      spent: spent,
+    };
+    const promise = new Promise((resolve, reject) => {
+      this.http
+        .get('http://localhost:3000/deleteTransactions', { params })
         .toPromise()
         .then((res: any) => {
           resolve();

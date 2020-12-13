@@ -5,6 +5,8 @@ import * as d3 from 'd3';
 import { isEmptyObject } from 'jquery';
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
+declare var $: any;
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -21,14 +23,44 @@ export class DashboardComponent implements AfterViewInit, OnInit {
   public totalSpent = 0;
   public totalSaving = 0;
   public budget;
-  public transactions=[];
+  public transactions = [];
+  public monthData = [];
+  public month;
+  public addMonth;
+  public addmonthSelected = 'January';
+  public addyearSelected = '2020';
+  public years;
+  public months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
   constructor(
     public dataService: DataService,
     public loginServiceService: LoginServiceService,
     private router: Router
   ) {}
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    $('#datepicker').datepicker({
+      format: 'mm-yyyy',
+      startView: 'months',
+      minViewMode: 'months',
+    });
+    this.years = [];
+    for (let i = 0; i < 20; ++i) {
+      this.years.push(2010 + i);
+    }
+  }
   ngAfterViewInit(): void {
     // service call only if data is empty
     console.log('After View');
@@ -113,6 +145,10 @@ export class DashboardComponent implements AfterViewInit, OnInit {
       data: this.dataService.dataSource,
     });
   }
-
-
+  onChangeMonth(month): void {
+    console.log('I am here with ', month);
+  }
+  addMonthToBudget(addmonth, addYear): void {
+    console.log(addmonth, addYear);
+  }
 }
