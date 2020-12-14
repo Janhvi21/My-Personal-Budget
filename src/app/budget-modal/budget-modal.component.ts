@@ -1,4 +1,11 @@
-import { Component, Input, OnInit, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  AfterViewInit,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { DataService } from '../data.service';
 
 @Component({
@@ -14,19 +21,21 @@ export class BudgetModalComponent implements OnInit {
   @Output() childEvent = new EventEmitter();
   constructor(public dataService: DataService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
 
   onAddCategory(category: string, amount: string) {
-    this.dataService.insertCategory(category, amount).then((res: any) => {
-      this.dataService.getDataFromFirebase();
-      setTimeout(() => {
-        this.budget = this.dataService.UserData;
-        this.ngOnInit();
-      }, 500);
-    });
+    this.dataService
+      .insertCategory(category, amount)
+      .then((res: any) => {
+        this.dataService.getDataFromFirebase();
+        setTimeout(() => {
+          this.budget = this.dataService.UserData;
+          this.ngOnInit();
+        }, 500);
+      });
   }
   OnDelete(rows) {
-    console.log('Delete', rows);
     this.dataService.deleteCategory(rows).then((res: any) => {
       this.dataService.getDataFromFirebase();
       setTimeout(() => {

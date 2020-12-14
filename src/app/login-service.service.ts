@@ -3,6 +3,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import firebase from 'firebase';
+import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,10 +12,13 @@ export class LoginServiceService {
   ErrorMessage: '';
   isLoggedIn = false;
   Token: '';
+  public date=new Date();
+
   constructor(
     public firebaseAuth: AngularFireAuth,
     private router: Router,
-    private http: HttpClient
+    private http: HttpClient,
+    private dataService:DataService
   ) {}
 
   async signin(email: string, password: string): Promise<boolean> {
@@ -40,6 +44,8 @@ export class LoginServiceService {
           .then((res2: any) => {
             console.log('token response', res2);
             this.isLoggedIn = true;
+            this.dataService.setMonth=this.dataService.allmonths[this.date.getUTCMonth()];
+            this.dataService.setYear=this.date.getFullYear().toString();
             this.router.navigate(['/sidebar']);
           });
         return true;
@@ -52,22 +58,31 @@ export class LoginServiceService {
   }
   async signup(name: string, email: string, password: string) {
     this.http
-      .post(
-        'http://localhost:3000/createNewUser',
-        {
-          username: name,
-          password: password.trim(),
-          email: email.trim(),
-          monthly_expenses: '',
-        },
-        { responseType: 'text' }
-      )
+      .post('http://localhost:3000/createNewUser', {
+        username: name,
+        password: password.trim(),
+        email: email.trim(),
+        monthly_expenses: '',
+      })
       .toPromise()
       .then((res1: any) => {
-        console.log('Response', res1);
-        this.Token = res1.tokenID;
-        this.router.navigate(['/sidebar']);
+        this.firebaseAuth
+          .signInWithEmailAndPassword(email, password)
+          .then(async (res) => {
+            firebase
+              .auth()
+              .currentUser.getIdToken(true)
+              .then(function (idToken) {
+                localStorage.setItem('TOKEN', idToken);
+                this.dataService.setMonth=this.dataService.allmonths[this.date.getUTCMonth()];
+                this.dataService.setYear=this.date.getFullYear().toString();
+              })
+              .catch((e) => {
+                console.log('error in getting token' + e);
+              });
+          });
       });
+    this.router.navigate(['/sidebar']);
   }
   logout() {
     this.firebaseAuth.signOut();

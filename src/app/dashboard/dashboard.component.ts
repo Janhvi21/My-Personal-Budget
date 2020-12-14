@@ -30,20 +30,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
   public addmonthSelected = 'January';
   public addyearSelected = '2020';
   public years;
-  public months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
+  public date = new Date();
 
   constructor(
     public dataService: DataService,
@@ -62,15 +49,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     }
   }
   ngAfterViewInit(): void {
-    // service call only if data is empty
-    console.log('After View');
     if (
       isEmptyObject(this.dataService.data) ||
       isEmptyObject(this.dataService.dataSource)
     ) {
-      // this.dataService.getData();
       this.dataService.getDataFromFirebase();
-    } else {
     }
 
     setTimeout(() => {
@@ -79,11 +62,14 @@ export class DashboardComponent implements AfterViewInit, OnInit {
       this.createBarChart();
       this.budget = this.dataService.UserData;
       this.calculateTotalBudget();
-      console.log('Transactions', this.dataService.transactions);
+      this.month = this.dataService.setMonth + " " + this.dataService.setYear;
     }, 500);
   }
 
   calculateTotalBudget(): void {
+    this.totalSpent = 0;
+    this.totalSaving = 0;
+    this.totalBudget = 0;
     for (
       let i = 0;
       i < this.dataService.dataSource.datasets[0].data.length;
@@ -146,9 +132,12 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     });
   }
   onChangeMonth(month): void {
-    console.log('I am here with ', month);
+    this.dataService.setyearMonth(month);
+    this.ngAfterViewInit();
   }
   addMonthToBudget(addmonth, addYear): void {
-    console.log(addmonth, addYear);
+    let currmonth = this.month.split(' ');
+    this.dataService.addMonthToDB(addmonth, addYear);
+    this.ngAfterViewInit();
   }
 }

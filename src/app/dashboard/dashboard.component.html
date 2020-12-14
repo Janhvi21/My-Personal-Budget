@@ -129,7 +129,7 @@
                               [(ngModel)]="addmonthSelected"
                             >
                               <option
-                                *ngFor="let order of months"
+                                *ngFor="let order of dataService.allmonths"
                                 [value]="order"
                                 [attr.selected]="true"
                               >
@@ -157,7 +157,6 @@
                         </div>
 
                         <div class="row">
-
                           <div class="col-md-6 py-2">
                             <button
                               class="mdc-button mdc-button--raised"
@@ -166,7 +165,7 @@
                                   addmonthSelected,
                                   addyearSelected
                                 )
-                              "
+                              " data-dismiss="modal"
                             >
                               <span class="mdc-button__label">Add Month</span>
                             </button>

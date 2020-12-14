@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Data } from '@angular/router';
 import 'rxjs';
 import { AppModule } from './app.module';
+import { stringify } from '@angular/compiler/src/util';
 
 export class Element {
   value: '';
@@ -13,6 +14,20 @@ export class Element {
   providedIn: 'root',
 })
 export class DataService {
+  public allmonths = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
   public transactions = [];
   public UserData = [];
   public spentData = [];
@@ -36,6 +51,8 @@ export class DataService {
   public months = [];
   public data = [];
   public result;
+  public setYear = '';
+  public setMonth = '';
   constructor(private http: HttpClient) {}
 
   /*getData() {
@@ -59,16 +76,22 @@ export class DataService {
     });
     return promise;
   }*/
-
+  setyearMonth(monthyear) {
+    let temp = monthyear.split(' ');
+    this.setMonth = temp[0];
+    this.setYear = temp[1];
+  }
   getDataFromFirebase() {
     const params = {
       token: localStorage.getItem('TOKEN'),
     };
-    const promise = new Promise((resolve, reject) => {
+    console.log('Params', params);
+    const promise = new Promise<void>((resolve, reject) => {
       this.http
         .get('http://localhost:3000/getAllData', { params })
         .toPromise()
         .then((res: any) => {
+          this.months = [];
           let i = 0;
           for (let year in res) {
             if (year != 'email' && year != 'username') {
@@ -77,9 +100,11 @@ export class DataService {
               }
             }
           }
-          console.log('Months', this.months);
-          const budgetData = res['2020']['January']['Budget'];
-          const expData = res['2020']['January']['Expense'];
+          console.log('Response', res);
+          console.log('Month', this.setMonth);
+          console.log('Year', this.setYear);
+          const budgetData = res[this.setYear][this.setMonth]['Budget'];
+          const expData = res[this.setYear][this.setMonth]['Expense'];
           for (let budget in budgetData) {
             this.dataSource.datasets[0].data[i] = budgetData[budget];
             this.dataSource.labels[i] = budget;
@@ -87,20 +112,25 @@ export class DataService {
 
             i++;
           }
-          this.transactions = res['2020']['January']['Transactions'];
-          this.UserData = res['2020']['January']['Budget'];
+          this.transactions = res[this.setYear][this.setMonth]['Transactions'];
+          this.UserData = res[this.setYear][this.setMonth]['Budget'];
           resolve();
         });
     });
     return promise;
   }
-  insertCategory(category: string, amount: string) {
+  insertCategory(
+    category: string,
+    amount: string,
+  ) {
     const params = {
       token: localStorage.getItem('TOKEN'),
       category: category,
       Amount: amount,
+      month: this.setMonth,
+      year: this.setYear,
     };
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       this.http
         .get('http://localhost:3000/insertCategory', { params })
         .toPromise()
@@ -115,8 +145,10 @@ export class DataService {
       token: localStorage.getItem('TOKEN'),
       key: rows.key,
       value: rows.value,
+      month: this.setMonth,
+      year: this.setYear,
     };
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       this.http
         .get('http://localhost:3000/deleteCategory', { params })
         .toPromise()
@@ -130,7 +162,7 @@ export class DataService {
     category: string,
     amount: string,
     detail: string,
-    date: string
+    date: string,
   ) {
     const params = {
       token: localStorage.getItem('TOKEN'),
@@ -138,8 +170,10 @@ export class DataService {
       Date: date,
       Details: detail,
       Spent: amount,
+      month: this.setMonth,
+      year: this.setYear,
     };
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       this.http
         .get('http://localhost:3000/insertTransaction', { params })
         .toPromise()
@@ -156,8 +190,10 @@ export class DataService {
       id: id,
       category: category,
       spent: spent,
+      month: this.setMonth,
+      year: this.setYear,
     };
-    const promise = new Promise((resolve, reject) => {
+    const promise = new Promise<void>((resolve, reject) => {
       this.http
         .get('http://localhost:3000/deleteTransactions', { params })
         .toPromise()
@@ -165,6 +201,28 @@ export class DataService {
           resolve();
         });
     });
+    return promise;
+  }
+  addMonthToDB(
+    month: string,
+    year: string,
+  ) {
+    const params = {
+      token: localStorage.getItem('TOKEN'),
+      month: month,
+      year: year,
+      currMonth: this.setMonth,
+      currYear: this.setYear,
+    };
+    const promise = new Promise<void>((resolve, reject) => {
+      this.http
+        .get('http://localhost:3000/addMonthtoDB', { params })
+        .toPromise()
+        .then((res: any) => {
+          resolve();
+        });
+    });
+
     return promise;
   }
 }
