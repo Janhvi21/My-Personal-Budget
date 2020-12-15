@@ -165,7 +165,8 @@
                                   addmonthSelected,
                                   addyearSelected
                                 )
-                              " data-dismiss="modal"
+                              "
+                              data-dismiss="modal"
                             >
                               <span class="mdc-button__label">Add Month</span>
                             </button>
@@ -242,4 +243,44 @@
     </div>
   </div>
 </div>
-<script></script>
+<div class="text-center small mt-4">
+  <button
+    type="button"
+    id="refresh"
+    class="btn btn-secondary btn-lg"
+    data-toggle="modal"
+    style="visibility: hidden"
+    data-target="#timeoutModal"
+  >
+    Refresh Token
+  </button>
+</div>
+<div class="modal" id="timeoutModal">
+  <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Your Session is about to Expire</h4>
+        <button
+          type="button"
+          id="closeRefreshModal"
+          class="close"
+          data-dismiss="modal"
+          aria-hidden="true"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-default"
+          (click)="onRefreshTimer()"
+          data-dismiss="modal"
+        >
+          Refresh Token
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

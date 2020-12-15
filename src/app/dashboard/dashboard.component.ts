@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { LoginServiceService } from '../login-service.service';
 import { Chart } from 'chart.js';
 import * as d3 from 'd3';
@@ -6,13 +6,18 @@ import { isEmptyObject } from 'jquery';
 import { DataService } from '../data.service';
 import { Router } from '@angular/router';
 declare var $: any;
+import {
+  KeyValueChanges,
+  KeyValueDiffer,
+  KeyValueDiffers,
+} from '@angular/core';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })
-export class DashboardComponent implements AfterViewInit, OnInit {
+export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
   private svg;
   private margin = 50;
   private width = 750;
@@ -31,11 +36,15 @@ export class DashboardComponent implements AfterViewInit, OnInit {
   public addyearSelected = '2020';
   public years;
   public date = new Date();
+  public timeout;
+  public refreshmodal;
+  public showRefreshTokenModal = false;
 
   constructor(
     public dataService: DataService,
     public loginServiceService: LoginServiceService,
-    private router: Router
+    private router: Router,
+    private differs: KeyValueDiffers
   ) {}
   ngOnInit(): void {
     $('#datepicker').datepicker({
@@ -48,12 +57,19 @@ export class DashboardComponent implements AfterViewInit, OnInit {
       this.years.push(2010 + i);
     }
   }
+  ngOnDestroy(): void {
+    console.log('Destroyed');
+    clearTimeout(this.timeout);
+    clearTimeout(this.refreshmodal);
+  }
   ngAfterViewInit(): void {
     if (
       isEmptyObject(this.dataService.data) ||
       isEmptyObject(this.dataService.dataSource)
     ) {
       this.dataService.getDataFromFirebase();
+      this.showRefreshToken();
+      this.callTimer();
     }
 
     setTimeout(() => {
@@ -62,10 +78,32 @@ export class DashboardComponent implements AfterViewInit, OnInit {
       this.createBarChart();
       this.budget = this.dataService.UserData;
       this.calculateTotalBudget();
-      this.month = this.dataService.setMonth + " " + this.dataService.setYear;
+      this.month = this.dataService.setMonth + ' ' + this.dataService.setYear;
     }, 500);
   }
-
+  onRefreshTimer() {
+    this.loginServiceService.signin(
+      localStorage.getItem('Email'),
+      localStorage.getItem('Password')
+    );
+    clearTimeout(this.timeout);
+    clearTimeout(this.refreshmodal);
+    this.showRefreshToken();
+    this.callTimer();
+  }
+  showRefreshToken(): void {
+    this.refreshmodal = setTimeout(() => {
+      document.getElementById('refresh').click();
+    }, 50000);
+  }
+  callTimer(): void {
+    this.timeout = setTimeout(() => {
+      clearTimeout(this.timeout);
+      document.getElementById('closeRefreshModal').click();
+      localStorage.clear();
+      this.loginServiceService.logout();
+    }, 60000);
+  }
   calculateTotalBudget(): void {
     this.totalSpent = 0;
     this.totalSaving = 0;
@@ -87,6 +125,10 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     this.ngAfterViewInit();
   }
   createBarChart(): void {
+    let myBarChart;
+    if (myBarChart != null) {
+      myBarChart.destroy();
+    }
     const ctx = document.getElementById('barChart');
 
     const barData = {
@@ -106,7 +148,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
       ],
     };
 
-    const myBarChart = new Chart(ctx, {
+    myBarChart = new Chart(ctx, {
       type: 'bar',
       data: barData,
       options: {
@@ -133,11 +175,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
   }
   onChangeMonth(month): void {
     this.dataService.setyearMonth(month);
-    this.ngAfterViewInit();
+    this.reload('');
   }
   addMonthToBudget(addmonth, addYear): void {
     let currmonth = this.month.split(' ');
     this.dataService.addMonthToDB(addmonth, addYear);
-    this.ngAfterViewInit();
+    this.reload('');
   }
 }

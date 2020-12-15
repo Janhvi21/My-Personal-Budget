@@ -12,13 +12,13 @@ export class LoginServiceService {
   ErrorMessage: '';
   isLoggedIn = false;
   Token: '';
-  public date=new Date();
+  public date = new Date();
 
   constructor(
     public firebaseAuth: AngularFireAuth,
     private router: Router,
     private http: HttpClient,
-    private dataService:DataService
+    private dataService: DataService
   ) {}
 
   async signin(email: string, password: string): Promise<boolean> {
@@ -26,13 +26,13 @@ export class LoginServiceService {
     await this.firebaseAuth
       .signInWithEmailAndPassword(email, password)
       .then(async (res) => {
-        console.log(res);
         await firebase
           .auth()
           .currentUser.getIdToken(true)
           .then(function (idToken) {
+            localStorage.setItem('Email', email);
+            localStorage.setItem('Password', password);
             localStorage.setItem('TOKEN', idToken);
-            console.log('token current ', idToken);
             currentToken = idToken;
           });
         const params = {
@@ -42,47 +42,36 @@ export class LoginServiceService {
           .get('http://localhost:3000/verifyUser', { params })
           .toPromise()
           .then((res2: any) => {
-            console.log('token response', res2);
             this.isLoggedIn = true;
-            this.dataService.setMonth=this.dataService.allmonths[this.date.getUTCMonth()];
-            this.dataService.setYear=this.date.getFullYear().toString();
+            this.dataService.setMonth = this.dataService.allmonths[
+              this.date.getUTCMonth()
+            ];
+            this.dataService.setYear = this.date.getFullYear().toString();
             this.router.navigate(['/sidebar']);
           });
         return true;
       })
       .catch((Error) => {
         this.ErrorMessage = Error.message;
-        console.log('error' + this.ErrorMessage);
       });
     return false;
   }
   async signup(name: string, email: string, password: string) {
-    this.http
-      .post('http://localhost:3000/createNewUser', {
-        username: name,
-        password: password.trim(),
-        email: email.trim(),
-        monthly_expenses: '',
-      })
-      .toPromise()
-      .then((res1: any) => {
-        this.firebaseAuth
-          .signInWithEmailAndPassword(email, password)
-          .then(async (res) => {
-            firebase
-              .auth()
-              .currentUser.getIdToken(true)
-              .then(function (idToken) {
-                localStorage.setItem('TOKEN', idToken);
-                this.dataService.setMonth=this.dataService.allmonths[this.date.getUTCMonth()];
-                this.dataService.setYear=this.date.getFullYear().toString();
-              })
-              .catch((e) => {
-                console.log('error in getting token' + e);
-              });
+    const promise = new Promise<void>((resolve, reject) => {
+      this.http
+        .post('http://localhost:3000/createNewUser', {
+          username: name,
+          password: password.trim(),
+          email: email.trim(),
+          monthly_expenses: '',
+        })
+        .toPromise()
+        .then((res1: any) => {
+          this.signin(email, password).then((res: any) => {
+            resolve();
           });
-      });
-    this.router.navigate(['/sidebar']);
+        });
+    });
   }
   logout() {
     this.firebaseAuth.signOut();

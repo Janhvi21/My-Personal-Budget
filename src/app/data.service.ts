@@ -82,10 +82,13 @@ export class DataService {
     this.setYear = temp[1];
   }
   getDataFromFirebase() {
+    this.spentData = [];
+    this.UserData = [];
+    this.transactions = [];
+    this.dataSource.datasets[0].data = [];
     const params = {
       token: localStorage.getItem('TOKEN'),
     };
-    console.log('Params', params);
     const promise = new Promise<void>((resolve, reject) => {
       this.http
         .get('http://localhost:3000/getAllData', { params })
@@ -100,9 +103,11 @@ export class DataService {
               }
             }
           }
-          console.log('Response', res);
-          console.log('Month', this.setMonth);
-          console.log('Year', this.setYear);
+          if (!this.setMonth || !this.setYear) {
+            const date = new Date();
+            this.setMonth = this.allmonths[date.getUTCMonth()];
+            this.setYear = date.getFullYear().toString();
+          }
           const budgetData = res[this.setYear][this.setMonth]['Budget'];
           const expData = res[this.setYear][this.setMonth]['Expense'];
           for (let budget in budgetData) {
@@ -119,10 +124,7 @@ export class DataService {
     });
     return promise;
   }
-  insertCategory(
-    category: string,
-    amount: string,
-  ) {
+  insertCategory(category: string, amount: string) {
     const params = {
       token: localStorage.getItem('TOKEN'),
       category: category,
@@ -162,7 +164,7 @@ export class DataService {
     category: string,
     amount: string,
     detail: string,
-    date: string,
+    date: string
   ) {
     const params = {
       token: localStorage.getItem('TOKEN'),
@@ -184,7 +186,6 @@ export class DataService {
     return promise;
   }
   deleteTransactions(id: string, category: string, spent: string) {
-    console.log('Spent', spent);
     const params = {
       token: localStorage.getItem('TOKEN'),
       id: id,
@@ -203,10 +204,7 @@ export class DataService {
     });
     return promise;
   }
-  addMonthToDB(
-    month: string,
-    year: string,
-  ) {
+  addMonthToDB(month: string, year: string) {
     const params = {
       token: localStorage.getItem('TOKEN'),
       month: month,
